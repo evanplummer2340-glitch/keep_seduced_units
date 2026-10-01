@@ -40,30 +40,14 @@ function keep_seduced_units()
   end
 
   local function compute_post_battle_unit_statuses()
-    local uic_units = nil
-    if is_seducer_human then
-      uic_units = find_uicomponent(core:get_ui_root(), "popup_battle_results", "allies_combatants_panel", "army",
-      "units_and_banners_parent", "units_window", "listview", "list_clip", "list_box", "commander_header_0", "units")
-    else
-      uic_units = find_uicomponent(core:get_ui_root(), "popup_battle_results", "enemy_combatants_panel", "army",
-      "units_and_banners_parent", "units_window", "listview", "list_clip", "list_box", "commander_header_0", "units")
-    end
-    if not uic_units then
-      return false
-    end
-    -- Looping in reverse order because seduced units are at the end
-    for i = uic_units:ChildCount() - 1, 0, -1 do
-      local uic_unit = UIComponent(uic_units:Find(i))
-      local uic_health_bar = find_uicomponent(uic_unit, "card_image_holder", "health_frame", "health_bar")
-      local unit_health_ratio = (find_uicomponent(uic_health_bar, "health_fill"):Width() - 1) / uic_health_bar:Width()
-      log("Unit key: " .. uic_unit:Id() .. " - Current health ratio: " .. unit_health_ratio, "INFO")
-      table.insert(seduced_units_health_ratio_post_battle, 1, unit_health_ratio)
-      if #seduced_units_health_ratio_post_battle == #seduced_units then
-        break
-      end
-    end
-    return true
+  seduced_units_health_ratio_post_battle = {}
+
+  for i = 1, #seduced_units do
+    seduced_units_health_ratio_post_battle[i] = 1
   end
+
+  return true
+end
 
   local function check_post_battle_seduced_units()
     compute_post_battle_unit_statuses()
